@@ -1,56 +1,5 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define MAKS_SIZE 101
-
-class Stack{
-public:
-    int top = -1;
-    char operasi[MAKS_SIZE];
-
-    bool isEmpty(){
-        return top == -1;
-    }
-    bool isFull(){
-        return top == (MAKS_SIZE-1);
-    }
-    void push(char x){
-        if(isFull()){
-            cout << "Stack Penuh" << endl;
-        }
-        else{
-            operasi[++top] = x;
-        }
-    }
-    char pop(){
-        if(isEmpty()){
-            cout << "Stack Kosong" << endl;
-            return 0;
-        }
-        else{
-            int temp = operasi[top--];
-            return temp;
-        }
-    }
-    void print(){
-        for(int i = 0; i <= top; i++){
-            cout << operasi[i] << " ";
-        }
-        cout << "\n";
-    }
-};
-
-Stack infix;
-Stack postfix;
-
-bool isOperand(char x){
-    if(x == '1' || x == '2' || x == '3' || x == '4' || x == '5' ||
-        x == '6' || x == '7' || x == '8' || x == '9' ||x == '0'){
-        return true;
-    }
-    else{
-        return false;
-    }
-}
 
 bool isOperator(char x){
     if(x == '+' || x == '-' || x == '*' || x == '/' || x == '%'){
@@ -60,77 +9,59 @@ bool isOperator(char x){
     }
 }
 
-int precendence(char x){
-    if(x == '+' || x == '-'){
-        return 1;
-    }
-    if(x == '*' || x == '/'){
-        return 2;
-    }
-    return 0;
-}
-
-bool bigOne(char x, char y){
-    int xValue, yValue;
-    xValue = precendence(x);
-    yValue = precendence(y);
-    return xValue <= yValue;
-}
+vector <string> infix;
+string temp;
+vector <string>::iterator itr;
 
 void input(){
-    char forInfix[MAKS_SIZE];
-    cin.ignore(0, '\n');
-    cin.getline(forInfix, 100);
-    int i = -1;
-    vector<char> temp;
-    vector<char> result;
+    string str;
+    char ch;
+    while(cin.get(ch)){
+        if(ch == '\n'){
+            break;
+        }
+		if(ch != ' '){
+            str.push_back(ch);
+        }
+    }
+    int length = str.length();
 
-    while(forInfix[++i] != '\0'){       
-        if((forInfix[i] == '-' && isOperator(forInfix[i-1])) || (forInfix[i] == '-' && i == 0)){
-            cout << "-1 * ";
-        }
-        
-        // if((forInfix[i] == '-' && isOperator(forInfix[i-1])) || (forInfix[i] == '-' && i == 0)){
-        //     if(isOperand(forInfix[i+1])){
-        //         i++;
-        //         cout << forInfix[i-1] << forInfix[i];
-        //         if(isOperand(i+1)){
-        //             cout << forInfix[i+1] << " ";
-        //             i++;
-        //         }else{
-        //             cout << " ";
-        //             i++;
-        //         }
-        //     }else{
-        //         cout << "-1 * ";
-        //         i++;
-        //     }
-        // }
-        // if(isOperand(forInfix[i]) && isOperand(forInfix[i+1])){
-        //     cout << forInfix[i] << forInfix[i+1] << " ";
-        //     i++;
-        //     i++;
-        // }
-        // if(isOperand(forInfix[i]) && isOperand(forInfix[i-1])){
-        //     cout << forInfix[i] << " ";
-        //     i++;
-        // }
-        // Untuk menghilangkan spasi
-        if(forInfix[i] == ' '){
-            for(int j = i; forInfix[j] != '\0'; j++){
-                forInfix[j] = forInfix[j+1];
+    for(int i = 0; i < length; i++){
+        if(str[i] == '(' || str[i] == ')'){
+            if(temp.length() != 0){
+                infix.push_back(temp);
+                temp.clear();
             }
-            cout << forInfix[i] << " ";
+            infix.push_back(str.substr(i, 1));
         }
-        else{
-            cout << forInfix[i] << " ";
+        if(isdigit(str[i]) || (str[i] == '-' && i == 0 && isdigit(str[i+1])){
+            temp.push_back(str[i]);
         }
-        infix.push(forInfix[i]);
+        if(isOperator(str[i])){
+            if(temp.length() != 0){
+                infix.push_back(temp);
+                temp.clear();
+            }
+            if((str[i] == '-' && isOperator(str[i-1])) || (str[i] == '-' && i == 0 && str[i+1] == '(') || (str[i] == '-' && str[i-1] == '(')){
+                infix.push_back("-1");
+                infix.push_back("*");
+            }else{
+                infix.push_back(str.substr(i, 1));
+            }
+        }
+        if(isdigit(str[i]) || (str[i] == '-' && i == 0 && isdigit(str[i+1])){
+            temp.push_back(str[i]);
+        }
+    }
+    if(temp.length() != 0){
+        infix.push_back(temp);
+        temp.clear();
     }
 }
 
 int main(){
     input();
-
-    return 0;
+    for(itr = infix.begin(); itr != infix.end() ; itr++){
+        cout << *itr << " ";
+    }
 }
