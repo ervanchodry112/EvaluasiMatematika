@@ -82,9 +82,13 @@ void input(){
     cin.ignore(0, '\n');
     cin.getline(forInfix, 100);
     int i = -1;
-    
+    vector<char> temp;
+    vector<char> result;
+
     while(forInfix[++i] != '\0'){       
-        
+        if((forInfix[i] == '-' && isOperator(forInfix[i-1])) || (forInfix[i] == '-' && i == 0)){
+            cout << "-1 * ";
+        }
         
         // if((forInfix[i] == '-' && isOperator(forInfix[i-1])) || (forInfix[i] == '-' && i == 0)){
         //     if(isOperand(forInfix[i+1])){
