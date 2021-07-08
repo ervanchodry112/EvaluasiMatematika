@@ -1,6 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+/*
+Anggota Kelompok :
+1. Ervan Chodry         (2017051001)
+2. Fachri Azka Nur      (2017051054)
+*/
+
 bool isOperator(char x){
     if(x == '+' || x == '-' || x == '*' || x == '/' || x == '%'){
         return true;
