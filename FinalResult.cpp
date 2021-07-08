@@ -26,11 +26,31 @@ bool bigOne(string x, string y){
     return xValue <= yValue;
 }
 
+double execute(double x, double y, string n){
+    if(n == "+"){
+        return x+y;
+    }
+    if(n == "-"){
+        return x-y;
+    }
+    if(n == "*"){
+        return x*y;
+    }
+    if(n == "/"){
+        return x/y;
+    }
+    if(n == "%"){
+        return (int) x % (int) y;
+    }
+    return 0;
+}
+
 vector <string> infix;
 vector <string> postfix;
 string temp;
 vector <string>::iterator itr;
 vector <string>::iterator it;
+vector <string>::iterator iter;
 
 void input(){
     string str;
@@ -119,10 +139,29 @@ void toPostfix(){
     }
 }
 
+void result(){
+    stack <string> temp2;
+    int i = 0;
+    double res;
+    for(iter = postfix.begin(); iter != postfix.end() ; iter++, i++){
+        if(isdigit(postfix[i].back())){
+            temp2.push(postfix[i]);
+        }
+        else{
+            double A = strtod((temp2.top()).c_str(), NULL);
+            temp2.pop();
+            double B = strtod((temp2.top()).c_str(), NULL);
+            temp2.pop();
+            res = execute(B, A, postfix[i]);
+            temp2.push(to_string(res));
+        }
+    }
+    res = strtod((temp2.top()).c_str(), NULL);
+    cout << res << endl;
+}
+
 int main(){
     input();
     toPostfix();
-    for(it = postfix.begin(); it != postfix.end() ; it++){
-        cout << *it << " ";
-    }
+    result();
 }
