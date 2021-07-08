@@ -9,9 +9,28 @@ bool isOperator(char x){
     }
 }
 
+int precendence(string x){
+    if(x == "+" || x == "-"){
+        return 1;
+    }
+    if(x == "*" || x == "/" || x == "%"){
+        return 2;
+    }
+    return 0;
+}
+
+bool bigOne(string x, string y){
+    int xValue, yValue;
+    xValue = precendence(x);
+    yValue = precendence(y);
+    return xValue <= yValue;
+}
+
 vector <string> infix;
+vector <string> postfix;
 string temp;
 vector <string>::iterator itr;
+vector <string>::iterator it;
 
 void input(){
     string str;
@@ -57,9 +76,53 @@ void input(){
     }
 }
 
+void toPostfix(){
+    stack <string> temp2;
+    int i = 0;
+    for(itr = infix.begin(); itr != infix.end() ; itr++, i++){
+        if(isdigit(infix[i].back())){
+            postfix.push_back(infix[i]);
+            continue;
+        }
+        if(infix[i] == "("){
+            temp2.push(infix[i]);
+            continue;
+        }
+        if(infix[i] == ")"){
+            while(!temp2.empty() && (temp2.top() != "(")){
+                string toPush = temp2.top();
+                postfix.push_back(toPush);
+                temp2.pop();
+            }
+            temp2.pop();
+            continue;
+        }
+        if(isOperator(infix[i][0])){
+            if(temp2.empty() || temp2.top() == "("){
+                temp2.push(infix[i]);
+            }
+            else{
+                while(!temp2.empty() && (temp2.top() != "(") && bigOne(infix[i], temp2.top())){
+                    string toPush = temp2.top();
+                    postfix.push_back(toPush);
+                    temp2.pop();
+                }
+                temp2.push(infix[i] );
+            }
+            continue;
+        }
+    }
+    while(!temp2.empty()){
+        string toPush = temp2.top();
+        postfix.push_back(toPush);
+        temp2.pop();
+    }
+}
+
 int main(){
     input();
-    for(itr = infix.begin(); itr != infix.end() ; itr++){
-        cout << *itr << " ";
+    toPostfix();
+    for(it = postfix.begin(); it != postfix.end() ; it++){
+        cout << *it << " ";
     }
 }
